@@ -1,0 +1,31 @@
+{
+    "companyName": "logibearnz@gmail.com",
+    "longName": "prototype",
+    "projectType": "native",
+    "sdkVersion": "3",
+    "shortName": "prototype",
+    "targetPlatforms": ["basalt"],
+    
+    "uuid": "519053aa-373e-47ba-a8d5-083b42059271",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    },
+    "capabilities": [
+    "configurable"
+    ],
+    "appKeys": {
+     "backgroundColor":0,
+     "secondsEnabled":1,
+     "dateEnabled":2    
+    },
+     
+    "resources": {
+    "media": []
+    }
+    
+   
+
+
+}
+

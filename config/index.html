@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel='stylesheet' type ='text/css' href='/bower_components/Slate/dist/css/slate.min.css'>
+	<link rel='stylesheet' type ='text/css' href='/css/style.css'>
+</head>
+<body>
+	<h1 class='title'>Prototype Configuration</h1>
+	<div class="item-container">
+  	 <div class="item-container-content">
+    	  <div class="item">
+     	   Watch Face Settings
+   	  </div>
+  	 </div>
+	</div>
+
+	<div class="item-container">
+         <div class='item-container-header'>Customiability</div>
+          <div class="item-container-content">
+           <label class="item">
+      	    Background Colour
+	    <input id='backgroundColorPicker' type='text' class='item-color item-color-sunny' value='#000000'>
+   	   </label>
+          </div>
+         </div>
+
+	<div class="item-container">
+ 	  <div class="item-container-content">
+   	   <label class="item">
+      	    Seconds Hand Shown
+            <input id='secondstoggle' type='checkbox' class='item-checkbox' checked>
+    	   </label>
+ 	  </div>
+	</div>
+
+       <div class="item-container">
+        <div class="item-container-content">
+         <label class="item">
+	  Date Shown
+	  <input id='datetoggle' type='checkbox' class='item-checkbox'  checked>
+         </label>
+        </div>
+       </div>
+
+       <div class="item-container">
+        <div class="button-container">
+         <input id='submitButton' type='button' class='item-button' value='SUBMIT'>
+        </div>
+       </div>		
+	<script src='/bower_components/Slate/dist/js/slate.min.js'></script>
+	<script src='/js/main.js'></script>
+</body>
+</html>
+
