@@ -5,6 +5,7 @@
 #define KEY_BACKGROUND_COLOR 0
 #define KEY_SECONDS_ENABLED 1
 #define KEY_DATE_ENABLED 2
+#define KEY_DATE_FORMAT 3
 static Window *window;
 static Layer *s_simple_bg_layer, *s_date_layer, *s_hands_layer;
 static TextLayer *s_day_label, *s_num_label, *s_twelve_label, *s_one_label, *s_eleven_label, *s_two_label, *s_three_label, *s_four_label,
@@ -79,6 +80,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *background_color_t = dict_find(iter, KEY_BACKGROUND_COLOR);
   Tuple *seconds_enabled_t = dict_find(iter, KEY_SECONDS_ENABLED);
   Tuple *date_enabled_t = dict_find(iter, KEY_DATE_ENABLED);
+  Tuple *date_format_t = dict_find(iter, KET_DATE_FORMAT);
 
   if (background_color_t) {
     int background_color = background_color_t->value->int32;
@@ -102,6 +104,12 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	
 	update_time();
   }
+  if (date_format_t) {
+	date_format = date_format_t->value->int8;
+
+	persist_write_int(KEY_DATE_FORMAT, date_format);
+
+	
   }
 }
 
