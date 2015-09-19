@@ -17,7 +17,8 @@
     "appKeys": {
      "backgroundColor":0,
      "secondsEnabled":1,
-     "dateEnabled":2    
+     "dateEnabled":2,
+     "dateFormat":3    
     },
      
     "resources": {
