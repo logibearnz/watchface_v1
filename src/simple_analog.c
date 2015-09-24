@@ -2,6 +2,8 @@
 #define COLORS   true
 #include <pebble.h>
 
+#define ANTIALIASING true
+
 #define KEY_BACKGROUND_COLOR 0
 #define KEY_SECONDS_ENABLED 1
 #define KEY_DATE_ENABLED 2
@@ -14,10 +16,14 @@ static TextLayer *s_day_label, *s_num_label, *s_twelve_label, *s_one_label, *s_e
 static GPath *s_tick_paths[NUM_CLOCK_TICKS];
 static GPath *s_minute_arrow, *s_hour_arrow;
 static char s_num_buffer[4], s_day_buffer[6];
-static bool date_enabled = true;
-static bool seconds_enabled = true;
-static bool date_format = false;
+bool date_enabled = true;
+bool seconds_enabled = true;
+bool date_format = false;
 
+
+static void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
+  layer_mark_dirty(window_get_root_layer(window));
+}
 
 static void bg_update_proc(Layer *layer, GContext *ctx) {
    //Background Color
@@ -34,9 +40,11 @@ static void bg_update_proc(Layer *layer, GContext *ctx) {
 }
 
 static void hands_update_proc(Layer *layer, GContext *ctx) {
+  
   GRect bounds = layer_get_bounds(layer);
   GPoint center = grect_center_point(&bounds);
   int16_t second_hand_length = bounds.size.w / 2;
+  graphics_context_set_antialiased(ctx, ANTIALIASING);
 
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
@@ -78,10 +86,6 @@ static void date_update_proc(Layer *layer, GContext *ctx) {
   }
   
 
-static void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
-  layer_mark_dirty(window_get_root_layer(window));
-}
-
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *background_color_t = dict_find(iter, KEY_BACKGROUND_COLOR);
   Tuple *seconds_enabled_t = dict_find(iter, KEY_SECONDS_ENABLED);
@@ -96,17 +100,19 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if (seconds_enabled_t) {
     seconds_enabled = seconds_enabled_t->value->int8;
     persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
+    layer_mark_dirty(window_get_root_layer(window));
   }
-
+  
   if (date_enabled_t) {
 	  date_enabled = date_enabled_t->value->int8;
     persist_write_int(KEY_DATE_ENABLED, date_enabled);
 	}
+  
   if (date_format_t) {
     date_format = date_format_t->value->int8;
     persist_write_int(KEY_DATE_FORMAT, date_format);
   }
-  //layer_mark_dirty(window_get_root_layer(window));
+  
   }
 
 
