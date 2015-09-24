@@ -16,14 +16,18 @@ static GPath *s_minute_arrow, *s_hour_arrow;
 static char s_num_buffer[4], s_day_buffer[6];
 static bool date_enabled = true;
 static bool seconds_enabled = true;
+static bool date_format = false;
 
 
-
-static void bg_update_proc(Layer *layer, GContext *ctx) { //Background and Pointer colour
+static void bg_update_proc(Layer *layer, GContext *ctx) {
+   //Background Color
   graphics_context_set_fill_color(ctx, GColorPastelYellow);
+  //
   graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
+  //Colours garphic contents 
   graphics_context_set_fill_color(ctx, GColorBlack);
   
+  //fills and colours drawn Gpaths from main.h
   for (int i = 0; i < NUM_CLOCK_TICKS; ++i) {
     gpath_draw_filled(ctx, s_tick_paths[i]);
   }
@@ -36,7 +40,7 @@ static void hands_update_proc(Layer *layer, GContext *ctx) {
 
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
-  if (seconds_enabled == true) {
+  if (seconds_enabled != false) {
 	  int32_t second_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
 	  GPoint second_hand = {
 		.x = (int16_t)(sin_lookup(second_angle) * (int32_t)second_hand_length / TRIG_MAX_RATIO) + center.x,
@@ -70,7 +74,9 @@ static void date_update_proc(Layer *layer, GContext *ctx) {
 
   strftime(s_num_buffer, sizeof(s_num_buffer), "%d", t);
   text_layer_set_text(s_num_label, s_num_buffer);
-}
+  
+  }
+  
 
 static void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
   layer_mark_dirty(window_get_root_layer(window));
@@ -80,38 +86,29 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *background_color_t = dict_find(iter, KEY_BACKGROUND_COLOR);
   Tuple *seconds_enabled_t = dict_find(iter, KEY_SECONDS_ENABLED);
   Tuple *date_enabled_t = dict_find(iter, KEY_DATE_ENABLED);
-  Tuple *date_format_t = dict_find(iter, KET_DATE_FORMAT);
+  Tuple *date_format_t = dict_find(iter, KEY_DATE_FORMAT);
 
   if (background_color_t) {
     int background_color = background_color_t->value->int32;
-
     persist_write_int(KEY_BACKGROUND_COLOR, background_color);
-
-    bg_update_proc(background_color);
   }
 
   if (seconds_enabled_t) {
     seconds_enabled = seconds_enabled_t->value->int8;
-
     persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
+  }
 
-    hands_update_proc();
-	
   if (date_enabled_t) {
-	date_enabled = date_enabled_t->value->int8;
-	
-	persist_write_int(KEY_DATE_ENABLED, date_enabled);
-	
-	update_time();
-  }
+	  date_enabled = date_enabled_t->value->int8;
+    persist_write_int(KEY_DATE_ENABLED, date_enabled);
+	}
   if (date_format_t) {
-	date_format = date_format_t->value->int8;
-
-	persist_write_int(KEY_DATE_FORMAT, date_format);
-
-	
+    date_format = date_format_t->value->int8;
+    persist_write_int(KEY_DATE_FORMAT, date_format);
   }
-}
+  //layer_mark_dirty(window_get_root_layer(window));
+  }
+
 
 
 static void window_load(Window *window) {
@@ -142,7 +139,7 @@ static void window_load(Window *window) {
 	  text_layer_set_font(s_num_label, fonts_get_system_font(FONT_KEY_GOTHIC_24));
 
 	  layer_add_child(s_date_layer, text_layer_get_layer(s_num_label));
-  }
+  } 
   //Adding Numbers 
   //12
   s_twelve_label = text_layer_create(GRect(65, 12, 18, 20));
@@ -260,11 +257,13 @@ static void window_load(Window *window) {
 static void window_unload(Window *window) {
   layer_destroy(s_simple_bg_layer);
   layer_destroy(s_date_layer);
+  layer_destroy(s_hands_layer);
 
   text_layer_destroy(s_day_label);
   text_layer_destroy(s_num_label);
+  
 
-  layer_destroy(s_hands_layer);
+  
 }
 
 static void init() {
@@ -277,6 +276,7 @@ static void init() {
 
   s_day_buffer[0] = '\0';
   s_num_buffer[0] = '\0';
+  
 
   // init hand paths
   s_minute_arrow = gpath_create(&MINUTE_HAND_POINTS);
@@ -291,8 +291,15 @@ static void init() {
   for (int i = 0; i < NUM_CLOCK_TICKS; ++i) {
     s_tick_paths[i] = gpath_create(&ANALOG_BG_POINTS[i]);
   }
-
-  tick_timer_service_subscribe(SECOND_UNIT, handle_second_tick);
+  
+  //bool for deciding which service to subscribe to
+  if (seconds_enabled == true) {
+    tick_timer_service_subscribe(SECOND_UNIT, handle_second_tick);
+  } else {
+    tick_timer_service_subscribe(MINUTE_UNIT, handle_second_tick);
+  }
+  app_message_register_inbox_received(inbox_received_handler);
+  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
 static void deinit() {

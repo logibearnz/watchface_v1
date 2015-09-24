@@ -1,32 +1,27 @@
 {
-    "companyName": "logibearnz@gmail.com",
-    "longName": "prototype",
+    "appKeys": {
+        "backgroundColor": 0,
+        "dateEnabled": 2,
+        "dateFormat": 3,
+        "secondsEnabled": 1
+    },
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "Logan Wiffen",
+    "longName": "Prototype",
     "projectType": "native",
+    "resources": {
+        "media": []
+    },
     "sdkVersion": "3",
-    "shortName": "prototype",
-    "targetPlatforms": ["basalt"],
-    
+    "shortName": "Ptype",
+    "targetPlatforms": [
+        "basalt"
+    ],
     "uuid": "519053aa-373e-47ba-a8d5-083b42059271",
     "versionLabel": "1.0",
     "watchapp": {
         "watchface": true
-    },
-    "capabilities": [
-    "configurable"
-    ],
-    "appKeys": {
-     "backgroundColor":0,
-     "secondsEnabled":1,
-     "dateEnabled":2,
-     "dateFormat":3    
-    },
-     
-    "resources": {
-    "media": []
     }
-    
-   
-
-
 }
-
