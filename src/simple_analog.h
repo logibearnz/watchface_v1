@@ -13,10 +13,10 @@ static const struct GPathInfo ANALOG_BG_POINTS[] = {
     }
   },
   { 4, (GPoint []){ //1
-      {112, 0},
       {116, 0},
-      {111, 8},
-      {107, 8}
+      {120, 0},
+      {115, 8},
+      {111, 8}
     }
   },
   { 4, (GPoint []){ //2
@@ -41,10 +41,10 @@ static const struct GPathInfo ANALOG_BG_POINTS[] = {
     }
   },
   { 4, (GPoint []){ //5
-      {108, 160},
       {112, 160},
-      {116, 168},
-      {112, 168}
+      {116, 160},
+      {120, 168},
+      {116, 168}
     }
   },
   { 4, (GPoint []){ //6
@@ -55,10 +55,10 @@ static const struct GPathInfo ANALOG_BG_POINTS[] = {
     }
   },
   { 4, (GPoint []){ //7
-      {35, 160},
       {31, 160},
-      {28, 168},
-      {32, 168}
+      {27, 160},
+      {24, 168},
+      {28, 168}
     }
   },
   { 4, (GPoint []){ //8
@@ -83,10 +83,10 @@ static const struct GPathInfo ANALOG_BG_POINTS[] = {
     }
   },
   { 4, (GPoint []){ //11
-      {32, 0},
       {28, 0},
-      {34, 8},
-      {38, 8}
+      {24, 0},
+      {30, 8},
+      {34, 8}
     }
   },
   { 4, (GPoint []){ //TOP LINE

@@ -20,7 +20,6 @@ bool date_enabled = true;
 bool seconds_enabled = true;
 bool date_format = false;
 
-
 static void handle_second_tick(struct tm *tick_time, TimeUnits units_changed) {
   layer_mark_dirty(window_get_root_layer(window));
 }
@@ -48,7 +47,7 @@ static void hands_update_proc(Layer *layer, GContext *ctx) {
 
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
-  if (seconds_enabled != false) {
+  if(seconds_enabled == true) {
 	  int32_t second_angle = TRIG_MAX_ANGLE * t->tm_sec / 60;
 	  GPoint second_hand = {
 		.x = (int16_t)(sin_lookup(second_angle) * (int32_t)second_hand_length / TRIG_MAX_RATIO) + center.x,
@@ -84,6 +83,12 @@ static void date_update_proc(Layer *layer, GContext *ctx) {
   text_layer_set_text(s_num_label, s_num_buffer);
   
   }
+static void set_background_and_text_color(int color) {
+  GColor background_color = GColorFromHEX(color);
+  window_set_background_color(window, background_color);
+
+}
+
   
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
@@ -95,12 +100,14 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   if (background_color_t) {
     int background_color = background_color_t->value->int32;
     persist_write_int(KEY_BACKGROUND_COLOR, background_color);
+    set_background_and_text_color(background_color);
   }
 
+  
   if (seconds_enabled_t) {
-    seconds_enabled = seconds_enabled_t->value->int8;
-    persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
-    layer_mark_dirty(window_get_root_layer(window));
+    //seconds_enabled = seconds_enabled_t->value->int8;
+    //persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
+    //layer_mark_dirty(window_get_root_layer(window));
   }
   
   if (date_enabled_t) {
@@ -114,7 +121,6 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   }
   
   }
-
 
 
 static void window_load(Window *window) {
@@ -134,7 +140,7 @@ static void window_load(Window *window) {
 	  text_layer_set_text(s_day_label, s_day_buffer);
 	  text_layer_set_background_color(s_day_label, GColorClear);
 	  text_layer_set_text_color(s_day_label, GColorBlack);
-	  text_layer_set_font(s_day_label, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+	  text_layer_set_font(s_day_label, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
 
 	  layer_add_child(s_date_layer, text_layer_get_layer(s_day_label));
 
@@ -142,7 +148,7 @@ static void window_load(Window *window) {
 	  text_layer_set_text(s_num_label, s_num_buffer);
 	  text_layer_set_background_color(s_num_label, GColorClear);
 	  text_layer_set_text_color(s_num_label, GColorBlack);
-	  text_layer_set_font(s_num_label, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+	  text_layer_set_font(s_num_label, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
 
 	  layer_add_child(s_date_layer, text_layer_get_layer(s_num_label));
   } 
@@ -157,7 +163,7 @@ static void window_load(Window *window) {
   layer_add_child(s_date_layer, text_layer_get_layer(s_twelve_label));
   
   //1
-  s_one_label = text_layer_create(GRect(102, 12, 18, 20));
+  s_one_label = text_layer_create(GRect(106, 12, 18, 20));
   text_layer_set_text(s_one_label, "1");
   text_layer_set_background_color(s_one_label, GColorClear);
   text_layer_set_text_color(s_one_label, GColorBlack);
@@ -193,7 +199,7 @@ static void window_load(Window *window) {
   layer_add_child(s_date_layer, text_layer_get_layer(s_four_label));
   
   //five
-  s_five_label = text_layer_create(GRect(102, 135, 18, 20));
+  s_five_label = text_layer_create(GRect(106, 135, 18, 20));
   text_layer_set_text(s_five_label, "5");
   text_layer_set_background_color(s_five_label, GColorClear);
   text_layer_set_text_color(s_five_label, GColorBlack);
@@ -211,7 +217,7 @@ static void window_load(Window *window) {
   layer_add_child(s_date_layer, text_layer_get_layer(s_six_label));
   
   //seven
-  s_seven_label = text_layer_create(GRect(35, 135, 18, 20));
+  s_seven_label = text_layer_create(GRect(31, 135, 18, 20));
   text_layer_set_text(s_seven_label, "7");
   text_layer_set_background_color(s_seven_label, GColorClear);
   text_layer_set_text_color(s_seven_label, GColorBlack);
@@ -247,7 +253,7 @@ static void window_load(Window *window) {
   layer_add_child(s_date_layer, text_layer_get_layer(s_ten_label));
   
   //eleven 
-  s_eleven_label = text_layer_create(GRect(32, 12, 18, 20));
+  s_eleven_label = text_layer_create(GRect(28, 12, 18, 20));
   text_layer_set_text(s_eleven_label, "11");
   text_layer_set_background_color(s_eleven_label, GColorClear);
   text_layer_set_text_color(s_eleven_label, GColorBlack);
@@ -299,7 +305,7 @@ static void init() {
   }
   
   //bool for deciding which service to subscribe to
-  if (seconds_enabled == true) {
+  if(seconds_enabled == true) {
     tick_timer_service_subscribe(SECOND_UNIT, handle_second_tick);
   } else {
     tick_timer_service_subscribe(MINUTE_UNIT, handle_second_tick);
