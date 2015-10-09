@@ -92,6 +92,9 @@ static void set_background_and_text_color(int color) {
   
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+  
+  printf("dfdsfs");
+  
   Tuple *background_color_t = dict_find(iter, KEY_BACKGROUND_COLOR);
   Tuple *seconds_enabled_t = dict_find(iter, KEY_SECONDS_ENABLED);
   Tuple *date_enabled_t = dict_find(iter, KEY_DATE_ENABLED);
@@ -103,12 +106,12 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     set_background_and_text_color(background_color);
   }
 
-  
-  if (seconds_enabled_t) {
-    //seconds_enabled = seconds_enabled_t->value->int8;
-    //persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
-    //layer_mark_dirty(window_get_root_layer(window));
+if (seconds_enabled_t) {
+    seconds_enabled = seconds_enabled_t->value->int8;
+    persist_write_int(KEY_SECONDS_ENABLED, seconds_enabled);
   }
+ 
+
   
   if (date_enabled_t) {
 	  date_enabled = date_enabled_t->value->int8;
@@ -136,7 +139,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, s_date_layer);
   
   if (date_enabled == true) {
-	  s_day_label = text_layer_create(GRect(46, 105, 27, 24));
+	  s_day_label = text_layer_create(GRect(44, 105, 45, 24));
 	  text_layer_set_text(s_day_label, s_day_buffer);
 	  text_layer_set_background_color(s_day_label, GColorClear);
 	  text_layer_set_text_color(s_day_label, GColorBlack);
@@ -144,7 +147,7 @@ static void window_load(Window *window) {
 
 	  layer_add_child(s_date_layer, text_layer_get_layer(s_day_label));
 
-	  s_num_label = text_layer_create(GRect(73, 105, 18, 24));
+	  s_num_label = text_layer_create(GRect(74, 105, 40, 24));
 	  text_layer_set_text(s_num_label, s_num_buffer);
 	  text_layer_set_background_color(s_num_label, GColorClear);
 	  text_layer_set_text_color(s_num_label, GColorBlack);
@@ -312,6 +315,7 @@ static void init() {
   }
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  
 }
 
 static void deinit() {

@@ -1,9 +1,9 @@
 {
     "appKeys": {
-        "backgroundColor": 0,
-        "dateEnabled": 2,
-        "dateFormat": 3,
-        "secondsEnabled": 1
+        "backgroundColor": 1,
+        "dateEnabled": 3,
+        "dateFormat": 4,
+        "secondsEnabled": 2
     },
     "capabilities": [
         "configurable"
